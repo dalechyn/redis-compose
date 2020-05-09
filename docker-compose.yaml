@@ -14,19 +14,19 @@ services:
   redis-3:
     build: ./redis-server
     volumes:
-      - ./redis-cluster/redis/conf/dev.conf:/usr/local/etc/redis/redis.conf
+      - ./redis-server/conf/dev.conf:/usr/local/etc/redis/redis.conf
 
   sentinel-1:
-    build: ./redis-sentinel
+    image: bitnami/redis-sentinel
     volumes:
-      - ./redis-sentinel/conf:/bitnami/redis-sentinel/conf
+      - $PWD/redis-sentinel/conf:/bitnami/redis-sentinel/conf
     ports: 
       - "26379:26379"
     
   sentinel-2:
     build: ./redis-sentinel
     volumes:
-      - ./redis-sentinel/conf:/bitnami/redis-sentinel/conf
+      - $PWD/redis-sentinel/conf:/bitnami/redis-sentinel/conf
     ports: 
       - "26380:26379"
 
