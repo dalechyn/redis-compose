@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  redis-1:
+    build: ./redis-server
+    volumes:
+      - ./redis-server/conf/dev.conf:/usr/local/etc/redis/redis.conf
+
+  redis-2:
+    build: ./redis-server
+    volumes:
+      - ./redis-server/conf/dev.conf:/usr/local/etc/redis/redis.conf
+
+  redis-3:
+    build: ./redis-server
+    volumes:
+      - ./redis-cluster/redis/conf/dev.conf:/usr/local/etc/redis/redis.conf
+
+  sentinel-1:
+    build: ./redis-sentinel
+    volumes:
+      - ./redis-sentinel/conf:/bitnami/redis-sentinel/conf
+    ports: 
+      - "26379:26379"
+    
+  sentinel-2:
+    build: ./redis-sentinel
+    volumes:
+      - ./redis-sentinel/conf:/bitnami/redis-sentinel/conf
+    ports: 
+      - "26380:26379"
+
+  sentinel-3:
+    build: ./redis-sentinel
+    volumes:
+      - ./redis-sentinel/conf:/bitnami/redis-sentinel/conf
+    ports: 
+      - "26381:26379"
+
+networks:
+  default:
+    name: redis_cluster
