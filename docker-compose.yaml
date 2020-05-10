@@ -1,42 +1,40 @@
 version: "3.8"
 
 services:
-  redis-1:
-    build: ./redis-server
-    volumes:
-      - ./redis-server/conf/dev.conf:/usr/local/etc/redis/redis.conf
+  master:
+    image: bitnami/redis
+    environment:
+      - REDIS_REPLICATION_NODE=master
+      - REDIS_PASSWORD=${MASTER_PASSWORD}
+    ports:
+      - '6379'
 
-  redis-2:
-    build: ./redis-server
+  slave:
+    image: bitnami/redis
     volumes:
-      - ./redis-server/conf/dev.conf:/usr/local/etc/redis/redis.conf
+      - ./data:/bitnami/redis/data
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=master
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_MASTER_PASSWORD=${MASTER_PASSWORD}
+      - REDIS_PASSWORD=${REPLICA_PASSWORD}
+    depends_on:
+      - master
+    ports:
+      - '6379'
 
-  redis-3:
-    build: ./redis-server
-    volumes:
-      - ./redis-server/conf/dev.conf:/usr/local/etc/redis/redis.conf
-
-  sentinel-1:
+  sentinel:
     image: bitnami/redis-sentinel
+    environment:
+      - REDIS_MASTER_HOST=master
     volumes:
-      - $PWD/redis-sentinel/conf:/bitnami/redis-sentinel/conf
+      - ./conf/sentinel.conf:/bitnami/sentinel/conf/sentinel.conf
+    depends_on:
+      - master
     ports: 
-      - "26379:26379"
+      - '5000'
     
-  sentinel-2:
-    build: ./redis-sentinel
-    volumes:
-      - $PWD/redis-sentinel/conf:/bitnami/redis-sentinel/conf
-    ports: 
-      - "26380:26379"
-
-  sentinel-3:
-    build: ./redis-sentinel
-    volumes:
-      - ./redis-sentinel/conf:/bitnami/redis-sentinel/conf
-    ports: 
-      - "26381:26379"
-
 networks:
   default:
     name: redis_cluster
