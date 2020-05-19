@@ -16,7 +16,6 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=master
-      - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_MASTER_PASSWORD=${MASTER_PASSWORD}
       - REDIS_PASSWORD=${REPLICA_PASSWORD}
     depends_on:
@@ -28,12 +27,14 @@ services:
     image: bitnami/redis-sentinel
     environment:
       - REDIS_MASTER_HOST=master
-    volumes:
-      - ./conf/sentinel.conf:/bitnami/sentinel/conf/sentinel.conf
+      - REDIS_MASTER_PASSWORD=${MASTER_PASSWORD}
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=6000
+      - REDIS_SENTINEL_FAILOVER_TIMEOUT=6000
     depends_on:
       - master
+      - slave
     ports: 
-      - '5000'
+      - '26379'
     
 networks:
   default:
