@@ -5,7 +5,6 @@ services:
     image: bitnami/redis
     environment:
       - REDIS_REPLICATION_MODE=master
-      - REDIS_MASTER_PASSWORD=${MASTER_PASSWORD}
       - REDIS_PASSWORD=${MASTER_PASSWORD}
     ports:
       - '6379:6379'
@@ -18,7 +17,7 @@ services:
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=master
       - REDIS_MASTER_PASSWORD=${MASTER_PASSWORD}
-      - REDIS_PASSWORD=${REPLICA_PASSWORD}
+      - REDIS_PASSWORD=${MASTER_PASSWORD}
     depends_on:
       - master
     ports:
