@@ -3,6 +3,8 @@ version: "3.8"
 services:
   master:
     image: bitnami/redis
+    volumes:
+      - ./modules:/bitnami/redis/modules
     environment:
       - REDIS_REPLICATION_MODE=master
       - REDIS_PASSWORD=${MASTER_PASSWORD}
@@ -13,6 +15,7 @@ services:
     image: bitnami/redis
     volumes:
       - ./data:/bitnami/redis/data
+      - ./modules:/bitnami/redis/modules
     environment:
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=master
@@ -22,6 +25,19 @@ services:
       - master
     ports:
       - '6380:6379'
+
+  injector:
+    image: redis:latest
+    depends_on:
+      - master
+      - slave
+    links:
+      - master
+      - slave
+    entrypoint: 
+      bash -c "redis-cli -a ${MASTER_PASSWORD} -h master -p 6379 MODULE LOAD /bitnami/redis/modules/rejson.so && redis-cli -a ${MASTER_PASSWORD} -h slave -p 6379 MODULE LOAD /bitnami/redis/modules/rejson.so"
+    environment:
+      - REDIS_MASTER_HOST=master
 
   sentinel:
     image: bitnami/redis-sentinel
