@@ -2,6 +2,8 @@
 Stupidly simple, scalable redis cluster using `bitnami` images, for deployment on single host.
 Nice for redis/docker starters. 
 
+Also note that `injector` container injects ReJSON module and enables keyevent notifications.
+
 ## WARNING
 Don't mind using that in production - only basic security things such as master and replica passwords are covered.
 You should guard your containers and network by yourself.
