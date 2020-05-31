@@ -36,8 +36,8 @@ services:
       - slave
     entrypoint: 
       bash -c "
-      (echo \"MODULE LOAD /bitnami/redis/modules/rejson.so\"; echo \"CONFIG SET notify-keyspace-events E\") | redis-cli -a ${MASTER_PASSWORD} -h master -p 6379 --pipe && 
-      (echo \"MODULE LOAD /bitnami/redis/modules/rejson.so\"; echo \"CONFIG SET notify-keyspace-events E\") | redis-cli -a ${MASTER_PASSWORD} -h slave -p 6379 --pipe"
+      (echo \"MODULE LOAD /bitnami/redis/modules/rejson.so\"; echo \"CONFIG SET notify-keyspace-events AKE\") | redis-cli -a ${MASTER_PASSWORD} -h master -p 6379 --pipe && 
+      (echo \"MODULE LOAD /bitnami/redis/modules/rejson.so\"; echo \"CONFIG SET notify-keyspace-events AKE\") | redis-cli -a ${MASTER_PASSWORD} -h slave -p 6379 --pipe"
     environment:
       - REDIS_MASTER_HOST=master
 
