@@ -4,8 +4,10 @@ services:
   master:
     image: bitnami/redis
     volumes:
+      - ./data:/bitnami/redis/data
       - ./modules:/bitnami/redis/modules
     environment:
+      - REDIS_MASTER_HOST=master
       - REDIS_REPLICATION_MODE=master
       - REDIS_PASSWORD=${MASTER_PASSWORD}
     ports:
@@ -48,6 +50,7 @@ services:
       - REDIS_MASTER_PASSWORD=${MASTER_PASSWORD}
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=6000
       - REDIS_SENTINEL_FAILOVER_TIMEOUT=6000
+      - REDIS_SENTINEL_PASSWORD=${SENTINEL_PASSWORD}
     depends_on:
       - master
       - slave
