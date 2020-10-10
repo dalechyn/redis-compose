@@ -5,10 +5,12 @@ Nice for redis/docker starters.
 Also note that `injector` container injects ReJSON module and enables keyevent notifications.
 
 ## WARNING
-Don't mind using that in production - only basic security things such as master and replica passwords are covered.
-You should guard your containers and network by yourself.
+~~Don't mind using that in production - only basic security things such as master and replica passwords are covered.
+You should guard your containers and network by yourself.~~
+Don't forget to fill the .env file
 
 ## Usage
+Before starting a cluster, make sure there is "data" directory chowned to user 1001
 ```bash
 docker-compose up --scale sentinel=3
 ```
